@@ -6,7 +6,3 @@
 
 Low level players (<80 lvl) are now able to queue up for random battleground.
 Set in your config `LowLevelRBG.MinLevelRBG` and `LowLevelRBG.MaxLevelRBG` to specify level range for players able to use this module.
-
-
-# Show your appreciation
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SBJFTAJKUNEXC)
