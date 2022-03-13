@@ -111,7 +111,7 @@ public:
                 return false;
             }
 
-            bgQueue.RemovePlayer(player->GetGUID(), false, qSlot);
+            bgQueue.RemovePlayer(player->GetGUID(), true);
             player->RemoveBattlegroundQueueId(bgQueueTypeId);
         }
 
@@ -177,7 +177,7 @@ public:
         }
 
         BattlegroundQueue& bgQueue = sBattlegroundMgr->GetBattlegroundQueue(bgQueueTypeId);
-        GroupQueueInfo* ginfo = bgQueue.AddGroup(player, nullptr, bracketEntry, false, false, 0, 0, 0);
+        GroupQueueInfo* ginfo = bgQueue.AddGroup(player, nullptr, bgTypeId, bracketEntry, false, false, false, 0, 0);
         uint32 avgWaitTime = bgQueue.GetAverageQueueWaitTime(ginfo);
 
         uint32 queueSlot = player->AddBattlegroundQueueId(bgQueueTypeId);
