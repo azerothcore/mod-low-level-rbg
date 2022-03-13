@@ -44,6 +44,10 @@ public:
             return false;
         }
 
+        // ignore if player is already in BG
+        if (player->InBattleground())
+            return false;
+
         if (sConfigMgr->GetOption<int32>("LowLevelRBG.MinLevelRBG", 10) > player->getLevel())
         {
             handler->PSendSysMessage("Too low level to get queued up for RBG");
@@ -97,24 +101,6 @@ public:
             return false;
         }
 
-        // pussywizard: if trying to queue for already queued
-        // just remove from queue and it will requeue!
-        uint32 qSlot = player->GetBattlegroundQueueIndex(bgQueueTypeId);
-        if (qSlot < PLAYER_MAX_BATTLEGROUND_QUEUES)
-        {
-            BattlegroundQueue& bgQueue = sBattlegroundMgr->GetBattlegroundQueue(bgQueueTypeId);
-            if (bgQueue.IsPlayerInvitedToRatedArena(player->GetGUID()))
-            {
-                WorldPacket data;
-                sBattlegroundMgr->BuildGroupJoinedBattlegroundPacket(&data, ERR_BATTLEGROUND_JOIN_FAILED);
-                player->SendDirectMessage(&data);
-                return false;
-            }
-
-            bgQueue.RemovePlayer(player->GetGUID(), false, qSlot);
-            player->RemoveBattlegroundQueueId(bgQueueTypeId);
-        }
-
         // must have free queue slot
         if (!player->HasFreeBattlegroundQueueId())
         {
@@ -133,6 +119,8 @@ public:
             player->SendDirectMessage(&data);
             return false;
         }
+
+        BattlegroundQueue& bgQueue = sBattlegroundMgr->GetBattlegroundQueue(bgQueueTypeId);
 
         lfg::LfgState lfgState = sLFGMgr->GetState(player->GetGUID());
         // check if player can queue:
@@ -176,10 +164,8 @@ public:
             return false;
         }
 
-        BattlegroundQueue& bgQueue = sBattlegroundMgr->GetBattlegroundQueue(bgQueueTypeId);
-        GroupQueueInfo* ginfo = bgQueue.AddGroup(player, nullptr, bracketEntry, false, false, 0, 0, 0);
+        GroupQueueInfo* ginfo = bgQueue.AddGroup(player, nullptr, bgTypeId, bracketEntry, 0, false, false, 0, 0);
         uint32 avgWaitTime = bgQueue.GetAverageQueueWaitTime(ginfo);
-
         uint32 queueSlot = player->AddBattlegroundQueueId(bgQueueTypeId);
 
         // send status packet
@@ -188,6 +174,8 @@ public:
         player->SendDirectMessage(&data);
 
         sScriptMgr->OnPlayerJoinBG(player);
+
+        sBattlegroundMgr->ScheduleQueueUpdate(0, 0, bgQueueTypeId, bgTypeId, bracketEntry->GetBracketId());
 
         return true;
     }
