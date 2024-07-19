@@ -48,14 +48,14 @@ public:
         if (player->InBattleground())
             return false;
 
-        if (sConfigMgr->GetOption<int32>("LowLevelRBG.MinLevelRBG", 10) > player->getLevel())
+        if (sConfigMgr->GetOption<int32>("LowLevelRBG.MinLevelRBG", 10) > player->GetLevel())
         {
             handler->PSendSysMessage("Too low level to get queued up for RBG");
             handler->SetSentErrorMessage(true);
             return false;
         }
 
-        if (sConfigMgr->GetOption<int32>("LowLevelRBG.MaxLevelRBG", 79) < player->getLevel())
+        if (sConfigMgr->GetOption<int32>("LowLevelRBG.MaxLevelRBG", 79) < player->GetLevel())
         {
             handler->PSendSysMessage("Too high level to get queued up for RBG");
             handler->SetSentErrorMessage(true);
@@ -95,7 +95,7 @@ public:
         }
 
         // expected bracket entry
-        PvPDifficultyEntry const* bracketEntry = GetBattlegroundBracketByLevel(bgt->GetMapId(), player->getLevel());
+        PvPDifficultyEntry const* bracketEntry = GetBattlegroundBracketByLevel(bgt->GetMapId(), player->GetLevel());
         if (!bracketEntry)
         {
             return false;
