@@ -112,7 +112,7 @@ public:
 
         // queue result (default ok)
         GroupJoinBattlegroundResult err = GroupJoinBattlegroundResult(bgt->GetBgTypeID());
-        if (!sScriptMgr->CanJoinInBattlegroundQueue(player, ObjectGuid::Empty, bgTypeId, false, err) && err <= 0)
+        if (!sScriptMgr->OnPlayerCanJoinInBattlegroundQueue(player, ObjectGuid::Empty, bgTypeId, false, err) && err <= 0)
         {
             WorldPacket data;
             sBattlegroundMgr->BuildGroupJoinedBattlegroundPacket(&data, err);
