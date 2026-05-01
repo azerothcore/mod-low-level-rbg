@@ -132,7 +132,7 @@ public:
         {
             err = ERR_LFG_CANT_USE_BATTLEGROUND;
         }
-        else if (!player->CanJoinToBattleground()) // has deserter debuff
+        else if (!player->CanJoinToBattleground(bgt)) // has deserter debuff
         {
             err = ERR_GROUP_JOIN_BATTLEGROUND_DESERTERS;
         }
